@@ -1,0 +1,90 @@
+using System;
+using System.IO;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Створення каталогу OOP_lab08 на диску D:
+        string rootDirectory = @"D:\OOP_lab08";
+        Directory.CreateDirectory(rootDirectory);
+
+        // Створення пiдкаталогiв
+        string[] subDirectories = { "KN1-B22", "Valtser", "Sources", "Reports", "Texts" };
+        foreach (var subDir in subDirectories)
+        {
+            string subDirectoryPath = Path.Combine(rootDirectory, subDir);
+            Directory.CreateDirectory(subDirectoryPath);
+        }
+
+        // Копiювання каталогiв Texts, Sources, Reports до каталогу Valtser
+        string sourceDirectory = Path.Combine(rootDirectory, "Texts");
+        string destinationDirectory = Path.Combine(rootDirectory, "Valtser");
+        DirectoryCopy(sourceDirectory, Path.Combine(destinationDirectory, "Texts"), true);
+
+        sourceDirectory = Path.Combine(rootDirectory, "Sources");
+        DirectoryCopy(sourceDirectory, Path.Combine(destinationDirectory, "Sources"), true);
+
+        sourceDirectory = Path.Combine(rootDirectory, "Reports");
+        DirectoryCopy(sourceDirectory, Path.Combine(destinationDirectory, "Reports"), true);
+
+        // Перемiщення каталогу Valtser до каталогу KN1-B22
+        Directory.Move(destinationDirectory, Path.Combine(rootDirectory, "KN1-B22", "Valtser"));
+
+        // Створення текстового файлу dirinfo.txt у каталозi Texts
+        string textsDirectory = Path.Combine(rootDirectory, "Texts");
+        string fileInfoPath = Path.Combine(textsDirectory, "dirinfo.txt");
+        string directoryInfo = GetDirectoryInfo(textsDirectory);
+        File.WriteAllText(fileInfoPath, directoryInfo);
+
+        Console.WriteLine("Операцiї успiшно виконанi.");
+    }
+
+    // Метод для копiювання каталогу та його вмiсту
+    static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+    {
+        DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+        DirectoryInfo[] dirs = dir.GetDirectories();
+
+        if (!dir.Exists)
+        {
+            throw new DirectoryNotFoundException(
+                "Source directory does not exist or could not be found: "
+                + sourceDirName);
+        }
+
+        if (!Directory.Exists(destDirName))
+        {
+            Directory.CreateDirectory(destDirName);
+        }
+
+        FileInfo[] files = dir.GetFiles();
+        foreach (FileInfo file in files)
+        {
+            string temppath = Path.Combine(destDirName, file.Name);
+            file.CopyTo(temppath, false);
+        }
+
+        if (copySubDirs)
+        {
+            foreach (DirectoryInfo subdir in dirs)
+            {
+                string temppath = Path.Combine(destDirName, subdir.Name);
+                DirectoryCopy(subdir.FullName, temppath, copySubDirs);
+            }
+        }
+    }
+
+    // Метод для отримання iнформацiї про каталог
+    static string GetDirectoryInfo(string directoryPath)
+    {
+        DirectoryInfo dirInfo = new DirectoryInfo(directoryPath);
+        string info = $"iм'я каталогу: {dirInfo.Name}\n";
+        info += $"Шлях: {dirInfo.FullName}\n";
+        info += $"Дата створення: {dirInfo.CreationTime}\n";
+        info += $"Останнi змiни: {dirInfo.LastWriteTime}\n";
+        info += $"Кiлькiсть файлiв: {dirInfo.GetFiles().Length}\n";
+        info += $"Кiлькiсть пiдкаталогiв: {dirInfo.GetDirectories().Length}\n";
+        return info;
+    }
+}
