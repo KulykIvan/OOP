@@ -1,0 +1,27 @@
+namespace Lab_13
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+            this.MouseClick += new MouseEventHandler(this.Form1_MouseClick);
+        }
+
+        private void Form1_MouseClick(object sender, MouseEventArgs e)
+        {
+            int pixelChange = (int)(10 * 3.78); // 10 мм у пікселях
+
+            if (e.Button == MouseButtons.Right)
+            {
+                // Збільшення ширини форми на 10 мм 
+                this.Width += pixelChange;
+            }
+            else if (e.Button == MouseButtons.Left)
+            {
+                // Зменшення ширини форми на 10 мм 
+                this.Width -= pixelChange;
+            }
+        }
+    }
+}
