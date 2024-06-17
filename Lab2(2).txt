@@ -1,0 +1,74 @@
+class Employee
+{
+    private string fullName;
+    private int yearOfBirth;
+    private decimal salary;
+
+    public Employee(string fullName, int yearOfBirth, decimal salary)
+    {
+        this.fullName = fullName;
+        this.yearOfBirth = yearOfBirth;
+        this.salary = salary;
+        count++;
+    }
+
+    public string FullName { get => fullName; }
+    public int YearOfBirth { get => yearOfBirth; }
+    public decimal Salary { get => salary; }
+
+    private static int count = 0;
+    public static int Count { get => count; }
+}
+
+class Program
+{
+    public static void Main(string[] args)
+    {
+        // 4. Заповнення масиву employees даними з таблиці
+        Employee[] employees = new Employee[]
+        {
+            new Employee("Іванов І.І.", 1975, 517.50m),
+            new Employee("Петренко П.П.", 1956, 219.10m),
+            new Employee("Паніковський М.С.", 1967, 300.00m),
+            // ... 7 additional employees
+        };
+
+        // 5. Пошук співробітника з найменшою зарплатою
+        Employee employeeWithMinSalary = employees[0];
+        for (int i = 1; i < employees.Length; i++)
+        {
+            if (employees[i].Salary < employeeWithMinSalary.Salary)
+            {
+                employeeWithMinSalary = employees[i];
+            }
+        }
+
+        Console.WriteLine($"Співробітник з найменшою зарплатою:");
+        Console.WriteLine($" - ПІБ: {employeeWithMinSalary.FullName}");
+        Console.WriteLine($" - Рік народження: {employeeWithMinSalary.YearOfBirth}");
+        Console.WriteLine($" - Оклад: {employeeWithMinSalary.Salary}");
+
+        // 6. Перевірка наявності співробітника з прізвищем "Петренко"
+        bool isPetrenkoFound = false;
+        foreach (Employee employee in employees)
+        {
+            if (employee.FullName.StartsWith("Петренко"))
+            {
+                isPetrenkoFound = true;
+                break;
+            }
+        }
+
+        if (isPetrenkoFound)
+        {
+            Console.WriteLine("У масиві employees є співробітник з прізвищем \"Петренко\".");
+        }
+        else
+        {
+            Console.WriteLine("У масиві employees немає співробітника з прізвищем \"Петренко\".");
+        }
+
+        // 7. Виведення загальної кількості співробітників
+        Console.WriteLine($"Загальна кількість співробітників: {Employee.Count}");
+    }
+}
