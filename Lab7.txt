@@ -1,0 +1,158 @@
+using System;
+
+// Клас винятків KilkistException
+class KilkistException : Exception
+{
+    public KilkistException(string message) : base(message)
+    {
+    }
+}
+
+// Клас винятків SmugaRozgonuException
+class SmugaRozgonuException : Exception
+{
+    public SmugaRozgonuException(string message) : base(message)
+    {
+    }
+}
+
+// Клас Пасажир
+class Passenger
+{
+    public string FullName { get; set; }
+    public int SeatNumber { get; set; }
+}
+
+// Клас Літальний апарат
+abstract class Aircraft
+{
+    public string Name { get; set; }
+    public abstract int MaxPassengers { get; set; }
+    protected int CurrentPassengers { get; set; } = 0; // Поточна кількість пасажирів
+
+    public virtual void Takeoff()
+    {
+        Console.WriteLine($"{Name} злiтає.");
+    }
+
+    public void AddPassenger(Passenger passenger)
+    {
+        if (CurrentPassengers >= MaxPassengers)
+        {
+            throw new KilkistException("Перевищено максимальну кiлькiсть пасажирiв.");
+        }
+
+        CurrentPassengers++;
+        Console.WriteLine($"Пасажир {passenger.FullName} доданий до {Name}.");
+    }
+}
+
+// Клас Літак
+class Airplane : Aircraft
+{
+    private int runwayLength;
+
+    public override int MaxPassengers { get; set; }
+
+    public int RunwayLength
+    {
+        get { return runwayLength; }
+        set
+        {
+            if (value <= 0)
+            {
+                throw new SmugaRozgonuException("Неправильна довжина смуги розгону.");
+            }
+            runwayLength = value;
+        }
+    }
+
+    public int MinRunwayLength { get; set; } 
+
+    public override void Takeoff()
+    {
+        if (RunwayLength < MinRunwayLength) 
+        {
+            throw new SmugaRozgonuException("Довжина смуги розгону менша, нiж потрiбно для злiту.");
+        }
+
+        // Логіка зліту літака
+        base.Takeoff();
+    }
+}
+
+// Клас Гелікоптер
+class Helicopter : Aircraft
+{
+    public override int MaxPassengers { get; set; }
+
+    public override void Takeoff()
+    {
+        // Логіка зліту гелікоптера
+        base.Takeoff();
+    }
+}
+
+// Клас Аеропорт
+class Airport
+{
+    public string Name { get; set; }
+    public Aircraft[] Aircrafts { get; set; }
+
+    public Airport(string name, Aircraft[] aircrafts)
+    {
+        Name = name;
+        Aircrafts = aircrafts;
+    }
+
+    public void OperateAirport()
+    {
+        Console.WriteLine($"Ласкаво просимо до {Name}!");
+
+        foreach (var aircraft in Aircrafts)
+        {
+            try
+            {
+                aircraft.Takeoff();
+                aircraft.AddPassenger(new Passenger() { FullName = "Вальцер Вадим", SeatNumber = 59 });
+            }
+            catch (KilkistException ex)
+            {
+                Console.WriteLine($"Помилка: {ex.Message}");
+            }
+            catch (SmugaRozgonuException ex)
+            {
+                Console.WriteLine($"Помилка: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Неочiкувана помилка: {ex.Message}");
+            }
+        }
+
+        Console.WriteLine($"Операцiї в {Name} завершено.");
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        try
+        {
+            // Створення об'єктів літальних апаратів
+            Airplane airplane = new Airplane() { Name = "Лiтак Boeing 747", MaxPassengers = 450, RunwayLength = 3000, MinRunwayLength = 2500 }; 
+            Helicopter helicopter = new Helicopter() { Name = "Гелiкоптер Robinson R44", MaxPassengers = 4 };
+
+            // Створення аеропорту
+            Airport airport = new Airport("Мiжнародний аеропорт Жуляни", new Aircraft[] { airplane, helicopter });
+
+            // Операція аеропорту
+            airport.OperateAirport();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Неочiкувана помилка: {ex.Message}");
+        }
+    }
+}
