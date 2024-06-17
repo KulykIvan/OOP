@@ -1,0 +1,26 @@
+using System;
+
+class Program
+{
+    static void Main()
+    {
+        // Отримання поточної дати
+        DateTime currentDate = DateTime.Today;
+
+        Console.WriteLine("Введiть дату у форматi yyyy-mm-dd:");
+        DateTime targetDate = DateTime.Parse(Console.ReadLine());
+
+        // Пiдрахунок рiзницю мiж поточною датою i вказаною датою
+        TimeSpan difference = targetDate - currentDate;
+
+        // Перевiрка, чи вказана дата ще не минула
+        if (difference.Days >= 0)
+        {
+            Console.WriteLine("До вказаної дати залишилося " + difference.Days + " днiв.");
+        }
+        else
+        {
+            Console.WriteLine("Вказана дата вже минула.");
+        }
+    }
+}
