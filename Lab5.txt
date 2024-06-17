@@ -1,0 +1,99 @@
+using System;
+
+// Опис інтерфейсу IShape
+public interface IShape
+{
+    void DisplayShapeType(int number);
+    void DisplayArea();
+    double Dimension { get; set; }
+}
+
+// Опис інтерфейсу IColoredShape, що успадковується від IShape
+public interface IColoredShape : IShape
+{
+    string Color { get; set; }
+    void DisplayColor();
+}
+
+// Опис класу Circle, що реалізує інтерфейс IShape
+public class Circle : IShape
+{
+    public Circle(double radius)
+    {
+        Dimension = radius;
+    }
+
+    public double Dimension { get; set; }
+
+    public void DisplayShapeType(int number)
+    {
+        Console.WriteLine($"Коло #{number}.");
+    }
+
+    public void DisplayArea()
+    {
+        Console.WriteLine($"Площа кола: {Math.PI * Dimension * Dimension}");
+    }
+}
+
+// Опис класу ColoredCircle, що реалізує інтерфейс IColoredShape
+public class ColoredCircle : IColoredShape
+{
+    public ColoredCircle(double radius, string color)
+    {
+        Dimension = radius;
+        Color = color;
+    }
+
+    public double Dimension { get; set; }
+    public string Color { get; set; }
+
+    public void DisplayShapeType(int number)
+    {
+        Console.WriteLine($"Кольорове коло #{number}.");
+    }
+
+    public void DisplayArea()
+    {
+        Console.WriteLine($"Площа кольорового кола: {Math.PI * Dimension * Dimension}");
+    }
+
+    public void DisplayColor()
+    {
+        Console.WriteLine($"Колiр кола: {Color}");
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        // Створення екземплярів класів
+        IShape[] shapes = new IShape[]
+        {
+            new Circle(5),
+            new Circle(7),
+            new Circle(9),
+            new ColoredCircle(4, "червоний"),
+            new ColoredCircle(6, "зелений"),
+            new ColoredCircle(8, "синiй")
+        };
+
+        // Лічильник для нумерації кіл
+        int counter = 1;
+
+        // Метод, що виконує методи кожного елемента масиву
+        foreach (var shape in shapes)
+        {
+            shape.DisplayShapeType(counter);
+            shape.DisplayArea();
+
+            if (shape is IColoredShape coloredShape)
+            {
+                coloredShape.DisplayColor();
+            }
+
+            counter++; 
+        }
+    }
+}
