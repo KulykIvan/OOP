@@ -1,0 +1,92 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+class CharSet
+{
+    private HashSet<char> set;
+
+    // Конструктор класу, який iнiцiалiзує множину
+    public CharSet(IEnumerable<char> items)
+    {
+        set = new HashSet<char>(items);
+    }
+
+    // Перенавантаження оператора "-" для видалення елемента з множини
+    public static CharSet operator -(CharSet set, char item)
+    {
+        set.set.Remove(item);
+        return set;
+    }
+
+    // Перенавантаження оператора ">" для перевiрки на пiдмножину
+    public static bool operator >(CharSet set1, CharSet set2)
+    {
+        return set2.set.IsSubsetOf(set1.set);
+    }
+
+    // Перенавантаження оператора "<" для перевiрки на пiдмножину (без цього ">" не працює)
+    public static bool operator <(CharSet set1, CharSet set2)
+    {
+        return set1.set.IsSubsetOf(set2.set);
+    }
+
+    // Перенавантаження оператора "!=" для перевiрки на нерiвнiсть множин
+    public static bool operator !=(CharSet set1, CharSet set2)
+    {
+        return !set1.set.SetEquals(set2.set);
+    }
+
+    // Перенавантаження оператора "==" для перевiрки на рiвнiсть множин (без цього "!=" не працює)
+    public static bool operator ==(CharSet set1, CharSet set2)
+    {
+        return set1.set.SetEquals(set2.set);
+    }
+
+    // Метод ToString() для зручного виводу множини
+    public override string ToString()
+    {
+        return "{" + string.Join(", ", set) + "}";
+    }
+
+    // Меток Equals для порiвняння множин
+    public override bool Equals(object obj)
+    {
+        if (obj == null || GetType() != obj.GetType())
+            return false;
+
+        CharSet other = (CharSet)obj;
+        return this == other;
+    }
+
+    // Метод GetHashCode для отримання хеш-коду (потрiбний для коректної роботи)
+    public override int GetHashCode()
+    {
+        return set.GetHashCode();
+    }
+}
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        CharSet set1 = new CharSet(new char[] { 'a', 'b', 'c', 'd' });
+        CharSet set2 = new CharSet(new char[] { 'c', 'd' });
+
+        Console.WriteLine("Множина 1: " + set1);
+        Console.WriteLine("Множина 2: " + set2);
+
+        // Видалення елементу 'c' з першої множини
+        set1 = set1 - 'c';
+
+        Console.WriteLine("\nМножина 1 пiсля видалення елементу 'c': " + set1);
+
+        // Перевiрка, чи друга множина є пiдмножиною першої
+        bool isSubset = set1 > set2;
+        Console.WriteLine("\nДруга множина є пiдмножиною першої: " + isSubset);
+
+        // Перевiрка, чи множини не рiвнi
+        bool notEqual = set1 != set2;
+        Console.WriteLine("\nМножини не рiвнi: " + notEqual);
+    }
+}
