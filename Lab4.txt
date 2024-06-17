@@ -1,0 +1,171 @@
+using System;
+using System.Collections.Generic;
+
+class Wing
+{
+    public int Length { get; set; }
+    public int Width { get; set; }
+
+    public Wing(int length, int width)
+    {
+        Length = length;
+        Width = width;
+    }
+
+    public override string ToString()
+    {
+        return $"Крило: Довжина = {Length}, Ширина = {Width}";
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj is Wing otherWing)
+        {
+            return Length == otherWing.Length && Width == otherWing.Width;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Length, Width);
+    }
+}
+
+class Chassis
+{
+    public int WheelCount { get; set; }
+
+    public Chassis(int wheelCount)
+    {
+        WheelCount = wheelCount;
+    }
+
+    public override string ToString()
+    {
+        return $"Шасі: Кількість коліс = {WheelCount}";
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj is Chassis otherChassis)
+        {
+            return WheelCount == otherChassis.WheelCount;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return WheelCount;
+    }
+}
+
+class Engine
+{
+    public int HorsePower { get; set; }
+
+    public Engine(int horsePower)
+    {
+        HorsePower = horsePower;
+    }
+
+    public void Start()
+    {
+        Console.WriteLine("Двигун запущено");
+    }
+
+    public void Stop()
+    {
+        Console.WriteLine("Двигун зупинено");
+    }
+
+    public override string ToString()
+    {
+        return $"Двигун: Потужність = {HorsePower} к.с.";
+    }
+
+    public override bool Equals(object obj)
+    {
+        if (obj is Engine otherEngine)
+        {
+            return HorsePower == otherEngine.HorsePower;
+        }
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return HorsePower;
+    }
+}
+
+class Airplane
+{
+    private Wing wing;
+    private Chassis chassis;
+    private Engine engine;
+
+    private List<string> route = new List<string>();
+
+    public Airplane(Wing wing, Chassis chassis, Engine engine)
+    {
+        this.wing = wing;
+        this.chassis = chassis;
+        this.engine = engine;
+    }
+
+    public void Fly()
+    {
+        Console.WriteLine("Літак у польоті");
+        engine.Start();
+    }
+
+    public void Land()
+    {
+        Console.WriteLine("Літак приземлився");
+        engine.Stop();
+    }
+
+    public void SetRoute(string destination)
+    {
+        route.Add(destination);
+        Console.WriteLine($"Маршрут встановлено: {destination}");
+    }
+
+    public void PrintRoute()
+    {
+        Console.WriteLine("Маршрут польоту:");
+        foreach (var destination in route)
+        {
+            Console.WriteLine($"- {destination}");
+        }
+    }
+
+    public override string ToString()
+    {
+        return $"Літак: {wing}, {chassis}, {engine}";
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        // Створення об'єктів частин літака
+        Wing wing = new Wing(30, 10);
+        Chassis chassis = new Chassis(3);
+        Engine engine = new Engine(1000);
+
+        // Створення об'єкта класу Літак
+        Airplane airplane = new Airplane(wing, chassis, engine);
+
+        // Літак в дії
+        Console.WriteLine(airplane);
+        airplane.Fly();
+        airplane.SetRoute("Київ");
+        airplane.SetRoute("Львів");
+        airplane.PrintRoute();
+        airplane.Land();
+    }
+}
