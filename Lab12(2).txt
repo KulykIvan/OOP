@@ -1,0 +1,60 @@
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace WinFormsApp25
+{
+    public partial class Form1 : Form
+    {
+        public Form1()
+        {
+            InitializeComponent();
+            InitializeCustomComponents(); // Додано ініціалізацію власних компонентів
+        }
+
+        // Метод для налаштування власних компонентів
+        private void InitializeCustomComponents()
+        {
+            this.FormBorderStyle = FormBorderStyle.None;
+            // this.BackColor = Color.Magenta;
+            // this.TransparencyKey = Color.Magenta;
+
+            // Додаткові налаштування стилю вікна
+            this.SetStyle(ControlStyles.ResizeRedraw, true);
+        }
+
+        // Перевизначення властивостей CreateParams для налаштування стилю вікна
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                CreateParams cp = base.CreateParams;
+                cp.ExStyle |= 0x00000020; // WS_EX_TRANSPARENT
+                return cp;
+            }
+        }
+
+        // Обробник події натискання клавіші
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Escape)
+            {
+                this.Close();
+            }
+        }
+
+        // Обробник події кліку мишею
+        private void Form1_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                this.Close();
+            }
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            // Додайте будь-які додаткові дії, які потрібно виконати при завантаженні форми
+        }
+    }
+}
