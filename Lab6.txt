@@ -1,0 +1,261 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+
+// Клас для роботи з колекцiєю рядкiв
+class StringCollectionType
+{
+    private List<string> items; // Поле для зберiгання рядкiв
+
+    // Конструктор класу
+    public StringCollectionType()
+    {
+        items = new List<string>(); // iнiцiалiзацiя списку рядкiв у конструкторi
+    }
+
+    // Метод додавання рядка до колекцiї
+    public void Add(string item)
+    {
+        items.Add(item);
+    }
+
+    // Метод видалення рядка з колекцiї
+    public void Remove(string item)
+    {
+        items.Remove(item);
+    }
+
+    // Метод пошуку рядкiв, якi мiстять задану пiдстрiчку
+    public IEnumerable<string> Find(string searchTerm)
+    {
+        return items.Where(item => item.Contains(searchTerm));
+    }
+
+    // Метод пiдрахунку кiлькостi рядкiв заданої довжини
+    public int CountStringsOfLength(int length)
+    {
+        return items.Count(item => item.Length == length);
+    }
+
+    // Метод сортування рядкiв за зростанням
+    public void SortAscending()
+    {
+        items.Sort();
+    }
+
+    // Метод сортування рядкiв за спаданням
+    public void SortDescending()
+    {
+        items.Sort();
+        items.Reverse();
+    }
+
+    // Перевизначений метод для представлення колекцiї рядкiв у виглядi рядка
+    public override string ToString()
+    {
+        return string.Join(", ", items);
+    }
+}
+
+// Клас для загального використання, який реалiзує колекцiю елементiв типу T
+class CollectionType<T> : IEnumerable<T> where T : IComparable<T>
+{
+    private List<T> items; // Поле для зберiгання об'єктiв типу T
+
+    // Конструктор класу
+    public CollectionType()
+    {
+        items = new List<T>(); // iнiцiалiзацiя списку об'єктiв у конструкторi
+    }
+
+    // Метод додавання елементу до колекцiї
+    public void Add(T item)
+    {
+        items.Add(item);
+    }
+
+    // Метод видалення елементу з колекцiї
+    public void Remove(T item)
+    {
+        items.Remove(item);
+    }
+
+    // iндексатор для доступу до елементiв колекцiї
+    public T this[int index]
+    {
+        get
+        {
+            if (index < 0 || index >= items.Count)
+            {
+                throw new IndexOutOfRangeException("iндекс знаходиться поза дiапазоном");
+            }
+            return items[index];
+        }
+        set
+        {
+            if (index < 0 || index >= items.Count)
+            {
+                throw new IndexOutOfRangeException("iндекс знаходиться поза дiапазоном");
+            }
+            items[index] = value;
+        }
+    }
+
+    // Властивiсть для отримання кiлькостi елементiв у колекцiї
+    public int Count
+    {
+        get { return items.Count; }
+    }
+
+    // Реалiзацiя iнтерфейсу IEnumerable для пiдтримки iтерацiї по колекцiї
+    public IEnumerator<T> GetEnumerator()
+    {
+        return items.GetEnumerator();
+    }
+
+    // Реалiзацiя неявної реалiзацiї iнтерфейсу IEnumerable
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
+}
+
+// Клас, який представляє працiвника
+class Employee : IComparable<Employee>
+{
+    // Поля для даних про працiвника
+    public string LastName { get; set; }
+    public string Initials { get; set; }
+    public int BirthYear { get; set; }
+    public double Salary { get; set; }
+
+    // Конструктор для iнiцiалiзацiї даних про працiвника
+    public Employee(string lastName, string initials, int birthYear, double salary)
+    {
+        LastName = lastName;
+        Initials = initials;
+        BirthYear = birthYear;
+        Salary = salary;
+    }
+
+    // Метод для порiвняння працiвникiв за прiзвищем
+    public int CompareTo(Employee other)
+    {
+        return string.Compare(this.LastName, other.LastName);
+    }
+}
+
+// Головний клас програми
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Створення колекцiй працiвникiв
+        List<CollectionType<Employee>> collections = new List<CollectionType<Employee>>();
+
+        // Створення перших двох колекцiй працiвникiв та їх заповнення елементами
+        CollectionType<Employee> employeesCollection1 = new CollectionType<Employee>();
+        employeesCollection1.Add(new Employee("Iванов", "I.I.", 1975, 520));
+        employeesCollection1.Add(new Employee("Петренко", "П.П.", 1956, 220));
+        CollectionType<Employee> employeesCollection2 = new CollectionType<Employee>();
+        employeesCollection2.Add(new Employee("Сидоренко", "С.С.", 1988, 300));
+        employeesCollection2.Add(new Employee("Бондаренко", "Б.Б.", 1990, 400));
+        employeesCollection2.Add(new Employee("Коваленко", "К.К.", 1985, 350));
+
+        // Додавання колекцiй до списку колекцiй
+        collections.Add(employeesCollection1);
+        collections.Add(employeesCollection2);
+
+        // Виведення загальної кiлькостi колекцiй
+        int totalCollections = collections.Count;
+        Console.WriteLine($"Загальна кiлькiсть колекцiй: {totalCollections}");
+
+        // Знаходження та виведення максимальної та мiнiмальної колекцiй
+        var maxCollection = collections.OrderByDescending(c => c.Count).FirstOrDefault();
+        Console.WriteLine("\nМаксимальна колекцiя:");
+        if (maxCollection != null)
+        {
+            foreach (var employee in maxCollection)
+            {
+                Console.WriteLine($"{employee.LastName}, {employee.Initials}, {employee.BirthYear}, {employee.Salary}");
+            }
+        }
+
+        var minCollection = collections.OrderBy(c => c.Count).FirstOrDefault();
+        Console.WriteLine("\nМiнiмальна колекцiя:");
+        if (minCollection != null)
+        {
+            foreach (var employee in minCollection)
+            {
+                Console.WriteLine($"{employee.LastName}, {employee.Initials}, {employee.BirthYear}, {employee.Salary}");
+            }
+        }
+
+        // Розрахунок та виведення середньої зарплати усiх працiвникiв
+        double averageSalary = collections.SelectMany(c => c).Average(e => e.Salary);
+        Console.WriteLine($"\nСередня зарплата усiх працiвникiв: {averageSalary}");
+
+        // Виведення працiвникiв з зарплатою вище середньої
+        var aboveAverageEmployees = collections.SelectMany(c => c).Where(e => e.Salary > averageSalary);
+        Console.WriteLine("\nПрацiвники з зарплатою вище середньої:");
+        foreach (var employee in aboveAverageEmployees)
+        {
+            Console.WriteLine($"{employee.LastName}, {employee.Initials}, {employee.BirthYear}, {employee.Salary}");
+        }
+
+        // Знаходження та виведення працiвника з найвищою зарплатою
+        var highestPaidEmployee = collections.SelectMany(c => c).OrderByDescending(e => e.Salary).FirstOrDefault();
+        if (highestPaidEmployee != null)
+        {
+            Console.WriteLine($"\nНайвища зарплата: {highestPaidEmployee.LastName}, {highestPaidEmployee.Initials}, {highestPaidEmployee.BirthYear}, {highestPaidEmployee.Salary}");
+        }
+
+        // Перевiрка, чи хоча б один працiвник народився пiсля 1980 року
+        bool bornAfter1980 = collections.SelectMany(c => c).Any(e => e.BirthYear > 1980);
+        Console.WriteLine($"\nХоча б один працiвник народився пiсля 1980 року: {bornAfter1980}");
+
+        // Знаходження та виведення працiвника з найменшою зарплатою серед тих, чиє прiзвище починається з "П"
+        var minSalaryEmployeeWithPLastName = collections.SelectMany(c => c)
+            .Where(e => e.LastName.StartsWith("П"))
+            .OrderBy(e => e.Salary)
+            .FirstOrDefault();
+        if (minSalaryEmployeeWithPLastName != null)
+        {
+            Console.WriteLine($"\nНайменша зарплата серед працiвникiв з прiзвищем на лiтеру 'П': {minSalaryEmployeeWithPLastName.LastName}, {minSalaryEmployeeWithPLastName.Initials}, {minSalaryEmployeeWithPLastName.BirthYear}, {minSalaryEmployeeWithPLastName.Salary}");
+        }
+
+        // Створення та робота з колекцiєю рядкiв
+        StringCollectionType stringCollection = new StringCollectionType();
+        stringCollection.Add("apple");
+        stringCollection.Add("banana");
+        stringCollection.Add("orange");
+        stringCollection.Add("grape");
+        stringCollection.Add("kiwi");
+
+        // Виведення рядкiв колекцiї
+        Console.WriteLine("\nРядки колекцiї:");
+        Console.WriteLine(stringCollection);
+
+        // Пошук та виведення рядкiв, що мiстять пiдстрiчку "a"
+        Console.WriteLine("\nРядки, що мiстять 'a':");
+        foreach (var item in stringCollection.Find("a"))
+        {
+            Console.WriteLine(item);
+        }
+
+        // Пiдрахунок та виведення кiлькостi рядкiв довжини 5
+        int stringsOfLength5 = stringCollection.CountStringsOfLength(5);
+        Console.WriteLine($"\nКiлькiсть рядкiв довжини 5: {stringsOfLength5}");
+
+        // Сортування рядкiв колекцiї за зростанням
+        stringCollection.SortAscending();
+        Console.WriteLine("\nСортування за зростанням:");
+        Console.WriteLine(stringCollection);
+
+        // Сортування рядкiв колекцiї за спаданням
+        stringCollection.SortDescending();
+        Console.WriteLine("\nСортування за спаданням:");
+        Console.WriteLine(stringCollection);
+    }
+}
