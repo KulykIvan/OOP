@@ -1,0 +1,103 @@
+using System;
+using System.IO;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        // Шлях до файлу "f.txt"
+        string filePath = @"D:\f.txt";
+
+        // Масив, в який будуть зчитуватись числа з файлу
+        int[] numbers = ReadNumbersFromFile(filePath);
+
+        if (numbers != null)
+        {
+            // Кiлькiсть парних чисел
+            int countEvenNumbers = CountEvenNumbers(numbers);
+
+            // Кiлькiсть подвоєних парних чисел 
+            int countDoubledEvenNumbers = CountDoubledEvenNumbers(numbers);
+
+            // Кiлькiсть квадратiв непарних чисел
+            int countSquaredOddNumbers = CountSquaredOddNumbers(numbers);
+
+            // Виведення результатiв
+            Console.WriteLine("Кiлькiсть парних чисел: " + countEvenNumbers);
+            Console.WriteLine("Кiлькiсть подвоєних парних чисел: " + countDoubledEvenNumbers);
+            Console.WriteLine("Кiлькiсть квадратiв непарних чисел: " + countSquaredOddNumbers);
+        }
+        else
+        {
+            Console.WriteLine("Не вдалося знайти або прочитати файл.");
+        }
+    }
+
+    // Метод для зчитування чисел з файлу
+    static int[] ReadNumbersFromFile(string filePath)
+    {
+        try
+        {
+            // Зчитування рядків з файлу
+            string[] lines = File.ReadAllLines(filePath);
+            
+            // Масив для зберiгання чисел
+            int[] numbers = new int[lines.Length];
+
+            // Перетворення кожного рядка у число i зберiгання його у масив
+            for (int i = 0; i < lines.Length; i++)
+            {
+                numbers[i] = int.Parse(lines[i]);
+            }
+
+            return numbers;
+        }
+        catch (Exception)
+        {
+            return null;
+        }
+    }
+
+    // Метод для пiдрахунку парних чисел
+    static int CountEvenNumbers(int[] numbers)
+    {
+        int count = 0;
+        foreach (var num in numbers)
+        {
+            if (num % 2 == 0)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    // Метод для пiдрахунку подвоєних парних чисел
+    static int CountDoubledEvenNumbers(int[] numbers)
+    {
+        int count = 0;
+        foreach (var num in numbers)
+        {
+            if (num % 2 == 0 && num % 4 == 0)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    // Метод для пiдрахунку квадратiв непарних чисел
+    static int CountSquaredOddNumbers(int[] numbers)
+    {
+        int count = 0;
+        foreach (var num in numbers)
+        {
+            if (num % 2 != 0)
+            {
+                int square = num * num;
+                count++;
+            }
+        }
+        return count;
+    }
+}
