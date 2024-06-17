@@ -1,0 +1,78 @@
+using System;
+using System.Collections.Generic;
+
+class Program
+{
+    static void Main()
+    {
+        string datesString = "2023-05-15, 2024-03-12, 2024-09-25";
+
+        // Розбиття рядкiв на масив, де кожен елемент - окрема дата
+        string[] datesArray = datesString.Split(',');
+
+        // Знаходження року з найменшим номером
+        int minYear = FindMinYear(datesArray);
+        Console.WriteLine("Рiк з найменшим номером: " + minYear);
+
+        // Знаходження всiх весняних дат
+        List<string> springDates = FindSpringDates(datesArray);
+        Console.WriteLine("\nВсi веснянi дати:");
+        foreach (string date in springDates)
+        {
+            Console.WriteLine(date);
+        }
+
+        // Знаходження самої пiзньої дати
+        string latestDate = FindLatestDate(datesArray);
+        Console.WriteLine("\nСама пiзня дата: " + latestDate);
+    }
+
+    // Метод для знаходження року з найменшим номером
+    static int FindMinYear(string[] dates)
+    {
+        int minYear = int.MaxValue;
+        foreach (string date in dates)
+        {
+            int year = int.Parse(date.Split('-')[0]);
+            if (year < minYear)
+            {
+                minYear = year;
+            }
+        }
+        return minYear;
+    }
+
+    // Метод для знаходження всiх весняних дат
+    static List<string> FindSpringDates(string[] dates)
+    {
+        List<string> springDates = new List<string>();
+        foreach (string date in dates)
+        {
+            int month = int.Parse(date.Split('-')[1]);
+            if (month >= 3 && month <= 5)
+            {
+                springDates.Add(date);
+            }
+        }
+        return springDates;
+    }
+
+    // Метод для знаходження самої пiзньої дати
+    static string FindLatestDate(string[] dates)
+    {
+        DateTime latestDate = DateTime.MinValue;
+        foreach (string date in dates)
+        {
+            string[] parts = date.Split('-');
+            int year = int.Parse(parts[0]);
+            int month = int.Parse(parts[1]);
+            int day = int.Parse(parts[2]);
+            DateTime currentDate = new DateTime(year, month, day);
+            if (currentDate > latestDate)
+            {
+                latestDate = currentDate;
+            }
+        }
+        return latestDate.ToString("yyyy-MM-dd");
+    }
+}
