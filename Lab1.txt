@@ -1,0 +1,34 @@
+using System;
+
+public class Table
+{
+    public static void Main(string[] args)
+    {
+        // Створити масив рядків для заголовків
+        string[] headers = { "Позначення", "Тип", "Номінал", "Кількість" };
+
+        // Створити масив масивів string для даних
+        string[][] data = {
+            new string[] { "RT-11-24", "R", "100000", "12" },
+            new string[] { "RT-11-24", "R", "50000", "10" },
+            new string[] { "CGU-12K", "C", "17,5", "3" }
+        };
+
+        // Вивести заголовки
+        for (int i = 0; i < headers.Length; i++)
+        {
+            Console.Write("{0,-15}", headers[i]);
+        }
+        Console.WriteLine();
+
+        // Вивести дані
+        foreach (string[] row in data)
+        {
+            for (int i = 0; i < row.Length; i++)
+            {
+                Console.Write("{0,-15}", row[i]);
+            }
+            Console.WriteLine();
+        }
+    }
+}
